@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Inheritance Query</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1515406959189-1ba51f180d16?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        .islamic-border {
+            border: 2px solid #D4AF37;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #22c55e;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            direction: rtl;
+            text-align: right;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col font-sans text-gray-800" role="main">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-green-800 to-teal-600 text-white py-6">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Islamic Symbol" class="w-12 h-12 mr-4">
+                <h1 class="text-3xl font-bold">Islamic Inheritance Query</h1>
+            </div>
+            <p class="text-sm italic">Powered by Shari'ah Knowledge</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-12 flex">
+        <!-- Query History Sidebar -->
+        <aside class="w-1/4 mr-6 hidden lg:block" aria-label="Query History">
+            <div class="bg-white bg-opacity-90 islamic-border p-6 rounded-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-green-800">Recent Queries</h2>
+                    <button id="clearHistory" class="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition duration-300" aria-label="Clear query history">Clear History</button>
+                </div>
+                <ul id="queryHistory" class="space-y-2 text-sm"></ul>
+            </div>
+        </aside>
+
+        <!-- Query Form and Response -->
+        <div class="flex-grow max-w-3xl">
+            <div class="bg-white bg-opacity-90 islamic-border p-8 rounded-lg fade-in" role="region" aria-label="Query Form">
+                <h2 class="text-2xl font-semibold text-green-800 mb-6 text-center">Ask About Islamic Inheritance</h2>
+                <form id="queryForm" class="space-y-4">
+                    <div>
+                        <label for="query" class="block text-lg font-medium text-gray-700">Your Question:</label>
+                        <textarea id="query" name="query" rows="4" class="mt-2 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="E.g., Who are the male heirs in Islamic inheritance?" required aria-required="true"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition duration-300 flex items-center justify-center">
+                        <span>Submit Query</span>
+                        <div id="spinner" class="spinner ml-2"></div>
+                    </button>
+                </form>
+                <div id="response" class="mt-6 p-4 bg-gray-100 rounded-lg hidden">
+                    <h3 class="text-lg font-semibold text-green-800">Answer:</h3>
+                    <p id="answer" class="text-gray-700 mt-2"></p>
+                    <!-- Feedback Buttons -->
+                    <div class="mt-4 flex space-x-4">
+                        <button id="thumbsUp" class="text-green-600 hover:text-green-800" aria-label="Rate answer as helpful">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                        </button>
+                        <button id="thumbsDown" class="text-red-600 hover:text-red-800" aria-label="Rate answer as unhelpful">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <button id="openFeedbackModal" class="text-blue-600 hover:text-blue-800" aria-label="Provide detailed feedback">Comment</button>
+                    </div>
+                </div>
+                <div id="error" class="mt-6 p-4 bg-red-100 text-red-700 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Quranic Verses Section -->
+            <div class="mt-12 bg-white bg-opacity-90 islamic-border p-8 rounded-lg fade-in" role="region" aria-label="Quranic Verses on Inheritance">
+                <h2 class="text-2xl font-semibold text-green-800 mb-6 text-center">Quranic Verses on Inheritance</h2>
+                <div class="space-y-8">
+                    <!-- Verse 4:11 -->
+                    <div>
+                        <p class="arabic" lang="ar">يُوصِيكُمُ ٱللَّهُ فِىٓ أَوْلَـٰدِكُمْ ۖ لِلذَّكَرِ مِثْلُ حَظِّ ٱلْأُنثَيَيْنِ...</p>
+                        <p class="text-gray-600 italic mt-2">Transliteration: Yūṣīkumu Allāhu fī awlādikum lil-dhakari mithlu ḥaẓẓi al-unthayayn...</p>
+                        <p class="text-gray-700 mt-2">Translation: Allah instructs you concerning your children: for the male, what is equal to the share of two females... (Surah An-Nisa 4:11)</p>
+                    </div>
+                    <!-- Verse 4:12 -->
+                    <div>
+                        <p class="arabic" lang="ar">وَلَكُمْ نِصْفُ مَا تَرَكَ أَزْوَٰجُكُمْ إِن لَّمْ يَكُن لَّهُنَّ وَلَدٌ...</p>
+                        <p class="text-gray-600 italic mt-2">Transliteration: Walakum niṣfu mā taraka azwājukum in lam yakun lahunna waladun...</p>
+                        <p class="text-gray-700 mt-2">Translation: And for you is half of what your wives leave if they have no child... (Surah An-Nisa 4:12)</p>
+                    </div>
+                    <!-- Verse 4:176 -->
+                    <div>
+                        <p class="arabic" lang="ar">يَسْتَفْتُونَكَ قُلِ ٱللَّهُ يُفْتِيكُمْ فِى ٱلْكَلَـٰلَةِ...</p>
+                        <p class="text-gray-600 italic mt-2">Transliteration: Yastaftūnaka quli Allāhu yuftīkum fī al-kalālati...</p>
+                        <p class="text-gray-700 mt-2">Translation: They request from you a ruling. Say, "Allah gives you a ruling concerning the one who has neither parents nor children..." (Surah An-Nisa 4:176)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decorative Islamic Images -->
+            <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="islamic-border overflow-hidden rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mosque" class="w-full h-48 object-cover">
+                </div>
+                <div class="islamic-border overflow-hidden rounded-lg">
+                    <img src="static/image2.jpg" alt="Qur'an" class="w-full h-48 object-cover">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden" role="dialog" aria-labelledby="modalTitle">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full islamic-border">
+            <h3 id="modalTitle" class="text-lg font-semibold text-green-800 mb-4">Provide Feedback</h3>
+            <textarea id="feedbackComment" rows="4" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Your feedback (optional)"></textarea>
+            <div class="mt-4 flex justify-end space-x-2">
+                <button id="cancelFeedback" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Cancel</button>
+                <button id="submitFeedback" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-green-800 text-white py-4">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 Islamic Inheritance Query. All rights reserved.</p>
+            <p class="text-sm mt-2">Developed by Abdullahi Ahmad for the Ummah</p>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            // Load query history from localStorage
+            let queryHistory = JSON.parse(localStorage.getItem('queryHistory')) || [];
+            function updateHistory(query, answer) {
+                queryHistory.unshift({ query, answer });
+                if (queryHistory.length > 5) queryHistory.pop(); // Limit to 5 entries
+                localStorage.setItem('queryHistory', JSON.stringify(queryHistory));
+                renderHistory();
+            }
+            function renderHistory() {
+                $('#queryHistory').empty();
+                queryHistory.forEach(item => {
+                    $('#queryHistory').append(`
+                        <li class="p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                            <strong>Q:</strong> ${item.query.substring(0, 50)}...<br>
+                            <span class="text-gray-600"><strong>A:</strong> ${item.answer.substring(0, 50)}...</span>
+                        </li>
+                    `);
+                });
+            }
+            function clearHistory() {
+                queryHistory = [];
+                localStorage.removeItem('queryHistory');
+                renderHistory();
+            }
+            renderHistory();
+
+            // Clear history button
+            $('#clearHistory').click(function() {
+                clearHistory();
+            });
+
+            // Query form submission
+            let currentQuery = '';
+            let currentAnswer = '';
+            $('#queryForm').submit(function(e) {
+                e.preventDefault();
+                currentQuery = $('#query').val();
+                if (!currentQuery) return;
+
+                // Show spinner
+                $('#spinner').show();
+                $('#response').addClass('hidden');
+                $('#error').addClass('hidden');
+
+                $.ajax({
+                    url: '/query',
+                    type: 'POST',
+                    data: { query: currentQuery },
+                    success: function(data) {
+                        currentAnswer = data.answer;
+                        $('#answer').text(currentAnswer);
+                        $('#response').removeClass('hidden').addClass('fade-in');
+                        updateHistory(currentQuery, currentAnswer);
+                    },
+                    error: function(xhr) {
+                        const errorMsg = xhr.responseJSON?.error || 'An error occurred. Please try again.';
+                        $('#error').text(errorMsg).removeClass('hidden').addClass('fade-in');
+                    },
+                    complete: function() {
+                        $('#spinner').hide();
+                    }
+                });
+            });
+
+            // Feedback handling
+            $('#thumbsUp, #thumbsDown').click(function() {
+                const rating = $(this).attr('id') === 'thumbsUp' ? 'positive' : 'negative';
+                $.ajax({
+                    url: '/feedback',
+                    type: 'POST',
+                    data: {
+                        query: currentQuery,
+                        answer: currentAnswer,
+                        rating: rating
+                    },
+                    success: function() {
+                        alert('Thank you for your feedback!');
+                    },
+                    error: function() {
+                        alert('Failed to submit feedback. Please try again.');
+                    }
+                });
+            });
+
+            // Feedback modal
+            $('#openFeedbackModal').click(function() {
+                $('#feedbackModal').removeClass('hidden');
+            });
+            $('#cancelFeedback').click(function() {
+                $('#feedbackModal').addClass('hidden');
+                $('#feedbackComment').val('');
+            });
+            $('#submitFeedback').click(function() {
+                const comment = $('#feedbackComment').val();
+                $.ajax({
+                    url: '/feedback',
+                    type: 'POST',
+                    data: {
+                        query: currentQuery,
+                        answer: currentAnswer,
+                        rating: 'comment',
+                        comment: comment
+                    },
+                    success: function() {
+                        alert('Thank you for your feedback!');
+                        $('#feedbackModal').addClass('hidden');
+                        $('#feedbackComment').val('');
+                    },
+                    error: function() {
+                        alert('Failed to submit feedback. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
