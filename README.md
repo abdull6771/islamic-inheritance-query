@@ -4,7 +4,7 @@ Islamic Inheritance Query
 
 A Flask-based web application that allows users to query Islamic inheritance laws using a Retrieval-Augmented Generation (RAG) system powered by LangChain, ChromaDB, and OpenAI's `gpt-4o-mini` model. The application features an Islamic-themed interface with Quranic verses, query history, feedback collection, and accessibility considerations.
 
----
+
 
  🌟 Features
 
@@ -16,7 +16,6 @@ A Flask-based web application that allows users to query Islamic inheritance law
 - Islamic Design: Tailwind CSS with a green and gold color scheme, Amiri font for Arabic text, and Islamic imagery.
 - Accessibility: ARIA attributes and responsive design for better usability.
 
----
 
 🛠 Tech Stack
 
@@ -26,7 +25,7 @@ A Flask-based web application that allows users to query Islamic inheritance law
 - Embedding Model: SentenceTransformer (`all-MiniLM-L6-v2`)
 - Fonts: Amiri (for Arabic text)
 
----
+
 
 ⚙️ Prerequisites
 
@@ -35,7 +34,6 @@ A Flask-based web application that allows users to query Islamic inheritance law
 - OpenAI API Key ([Get one here](https://platform.openai.com/signup))
 - A pre-indexed ChromaDB directory (`chroma_db`) generated from a Jupyter notebook processing an Islamic inheritance PDF
 
----
 
 🚀 Installation
 
